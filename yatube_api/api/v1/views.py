@@ -8,7 +8,7 @@ from .serializers import CommentSerializer, GroupSerializer, PostSerializer
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    """Получить список всех публикаций и создание новой публикации"""
+    """Получить список всех публикаций и создание новой публикации."""
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
@@ -21,12 +21,16 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
+    """Получить список всех имеющихся групп с их описанием."""
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class CommentViewSet(viewsets.ModelViewSet):
+    """Получить список всех комментариев к посту
+    и создание нового комментария.
+    """
     serializer_class = CommentSerializer
 
     def get_queryset(self):
@@ -44,4 +48,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class FollowViewSet(viewsets.ModelViewSet):
+    """Получить список всех подписок пользователя на авторов
+    и подписаться на нового автора.
+    """
     pass
