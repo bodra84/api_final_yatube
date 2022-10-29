@@ -1,11 +1,17 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import filters, permissions, viewsets
+from rest_framework import filters, mixins, permissions, viewsets
 from rest_framework.pagination import LimitOffsetPagination
 
 from posts.models import Group, Post
 from .permissions import IsAuthorOrReadOnly
 from .serializers import (CommentSerializer, FollowSerializer, GroupSerializer,
                           PostSerializer)
+
+
+class ListCreateViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,
+                        viewsets.GenericViewSet):
+    """Класс вьюсета для получения списка объектов и создания нового."""
+    pass
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -48,12 +54,11 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user, post=post)
 
 
-class FollowViewSet(viewsets.ModelViewSet):
+class FollowViewSet(ListCreateViewSet):
     """Получить список всех подписок пользователя на авторов
     и подписаться на нового автора.
     """
     serializer_class = FollowSerializer
-    permission_classes = [permissions.IsAuthenticated]
     filter_backends = (filters.SearchFilter,)
     search_fields = ('following__username',)
 
@@ -62,5 +67,3 @@ class FollowViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
-
