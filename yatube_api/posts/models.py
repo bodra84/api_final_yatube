@@ -48,3 +48,18 @@ class Follow(models.Model):
                                   blank=True, null=True,
                                   related_name='following',
                                   verbose_name='Автор')
+
+    class Meta:
+        """Класс описывает порядок сортировки и задает удобочитаемое имя."""
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "following"],
+                name="unique_user_following"
+            ),
+            models.CheckConstraint(
+                check=~models.Q(user=models.F('following')),
+                name='user_cannot_follow_yourself'
+            )
+        ]
