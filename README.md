@@ -84,7 +84,7 @@ POST /api/v1/jwt/refresh/
 Проверить токен:
 ```bash
 POST /api/v1/jwt/verify/
-
+```
 ### Авторы
 Давлат Файзиев
 
